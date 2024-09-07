@@ -1,0 +1,35 @@
+{
+  "name": "auth",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "test": "jest",
+    "build": "npm run test && npx tsc",
+    "start": "yarn build && npx ts-node -r tsconfig-paths/register dist/server.js"
+  },
+  "dependencies": {
+    "@types/uuid": "^10.0.0",
+    "axios": "^1.7.7",
+    "bcryptjs": "^2.4.3",
+    "express": "^4.19.2",
+    "express-async-errors": "^3.1.1",
+    "mongodb": "^6.8.0",
+    "sinon": "^18.0.0",
+    "typescript": "^5.5.4",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.12",
+    "@types/mongodb": "^4.0.7",
+    "@types/sinon": "^17.0.3",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "tsx": "^3.13.0"
+  }
+}

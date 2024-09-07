@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  auth-db:
+    image: mongo:latest
+    container_name: auth-db
+    restart: always
+    environment:
+      - MONGO_INITDB_DATABASE=auth-db
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    ports:
+      - 27017:27017
+
+  auth-ms:
+    build: "./auth-ms"
+    container_name: auth-ms
+    environment:
+      - PORT=4000
+      - MONGO_URI=mongodb://admin:admin@auth-db:27017/auth-db?authSource=admin
+    ports:
+      - 4000:4000
+    depends_on:
+      - auth-db
