@@ -7,7 +7,7 @@ class UserModel extends Model {
     password: string;
 
     constructor(login: string, password: string, id: string = "") {
-        super("users");
+        super();
         this._id = id;
         this.login = login;
         this.password = password
