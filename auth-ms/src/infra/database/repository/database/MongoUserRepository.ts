@@ -5,6 +5,7 @@ import { COLLECTION } from "@infra/database/Collection";
 import UserModel from "@infra/database/model/UserModel";
 import DBClient from "database/DBClient";
 import { ObjectId } from "mongodb";
+import { UserId } from "type";
 
 class MongoUserRepository implements UserRepository {
 

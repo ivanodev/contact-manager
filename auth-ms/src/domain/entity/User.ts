@@ -2,6 +2,7 @@ import BadRequestError from "@common/error/BadRequestError";
 import { StringUtils } from "@common/utils";
 import AccessUnauthenticatedError from "@infra/session/error/AccessUnauthenticatedError";
 import { compare, hash } from 'bcryptjs';
+import { UserId } from "type";
 
 class User {
 

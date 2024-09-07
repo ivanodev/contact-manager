@@ -1,5 +1,6 @@
 import EntityDeleteResult from "@common/entity/EntityDeleteResult";
 import User from "@domain/entity/User";
+import { UserId } from "type";
 
 interface UserRepository {
 

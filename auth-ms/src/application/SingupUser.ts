@@ -1,6 +1,7 @@
 import ConflictError from "@common/error/ConflictError";
 import User from "@domain/entity/User";
 import UserRepository from '@domain/repository/UserRepository';
+import { UserId } from "type";
 
 class SingupUser {
 

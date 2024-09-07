@@ -2,6 +2,7 @@ import EntityDeleteResult from "@common/entity/EntityDeleteResult";
 import User from "@domain/entity/User";
 import UserRepository from "@domain/repository/UserRepository";
 import UserModel from "@infra/database/model/UserModel";
+import { UserId } from "type";
 import { v4 as uuidv4 } from "uuid";
 
 class MemoryUserRepository implements UserRepository {
