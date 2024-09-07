@@ -39,11 +39,17 @@ class MongoUserRepository implements UserRepository {
     }
 
     private parseUserModel(user: User) : UserModel {
-        return new UserModel(user.login, user.password, user.id);
+        return new UserModel(user.login, user.password, user.id, user.roles);
     }
 
     private parseUserEntity(userModel: UserModel) : User {
-        return new User(userModel.login, userModel.password, userModel._id);
+        const user = new User(userModel.login, userModel.password, userModel._id.toString());
+        if (userModel.roles) {
+            userModel.roles.forEach(role => {
+                user.addRole(role)
+            });
+        }
+        return user;
     }
 }
 

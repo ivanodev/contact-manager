@@ -18,7 +18,21 @@ services:
     environment:
       - PORT=4000
       - MONGO_URI=mongodb://admin:admin@auth-db:27017/auth-db?authSource=admin
+    networks:
+      - contact-manager
     ports:
       - 4000:4000
     depends_on:
       - auth-db
+
+  token-redis:
+    container_name: token-redis
+    image: redis:latest
+    networks:
+      - contact-manager
+    ports:
+      - "6379:6379"
+
+networks:
+  contact-manager:
+    driver: bridge

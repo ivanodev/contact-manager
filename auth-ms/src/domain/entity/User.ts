@@ -9,6 +9,7 @@ class User {
     id: UserId;
     login: string;
     password: string;
+    roles: Set<string> = new Set();
     
     constructor(login: string, password: string, id: string = "") {
         this.checkLoginValid(login);
@@ -40,10 +41,24 @@ class User {
         const passMatch = await compare(password, this.password);
 
         if (!passMatch) {
-            throw new AccessUnauthenticatedError("The provided password is incorrect");
+            throw new AccessUnauthenticatedError("The provided user or password is incorrect");
         }
 
         return passMatch;
+    }
+
+    addRole(name: string): void {
+        if (StringUtils.isNull(name) || StringUtils.isEmpty(name)) return;
+        this.roles.add(name);    
+    }
+
+    clearRole(name: string): void {
+        if (StringUtils.isNull(name) || StringUtils.isEmpty(name)) return;
+        this.roles.delete(name);
+    }
+
+    clearAllRoles(): void {
+        this.roles.clear();
     }
 
     private checkLoginValid(email: string): void {
