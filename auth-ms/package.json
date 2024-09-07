@@ -7,7 +7,7 @@
     "dev": "tsx watch src/server.ts",
     "test": "jest",
     "build": "npm run test && npx tsc",
-    "start": "yarn build && npx ts-node -r tsconfig-paths/register dist/server.js"
+    "start": "yarn build && npx ts-node -r tsconfig-paths/register dist/src/server.js"
   },
   "dependencies": {
     "@types/uuid": "^10.0.0",
