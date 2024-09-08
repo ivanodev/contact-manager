@@ -1,5 +1,6 @@
-package com.anodos.contactms.controller;
+package com.anodos.contactms.infra.http.controller;
 
+import com.anodos.contactms.domain.exception.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
