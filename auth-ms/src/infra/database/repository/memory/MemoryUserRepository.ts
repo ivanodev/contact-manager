@@ -11,7 +11,7 @@ class MemoryUserRepository implements UserRepository {
 
     async save(user: User): Promise<User> {
 
-        const userModel = new UserModel(user.login, user.password, user.id);
+        const userModel = new UserModel(user.login, user.password, user.id, user.roles);
 
         const index = MemoryUserRepository.userModels.findIndex(u => u._id === user.id);
 
@@ -54,7 +54,12 @@ class MemoryUserRepository implements UserRepository {
     }
 
     private parseUser(userModel: UserModel): User {
-        return new User(userModel.login, userModel.password, userModel._id);
+
+        const user = new User(userModel.login, userModel.password, userModel._id);
+        if (userModel.roles) {
+            user.roles = new Set(userModel.roles);
+        }
+        return user;
     }
 } 
 

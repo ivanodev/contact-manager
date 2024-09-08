@@ -3,6 +3,7 @@ import MongoDBClientAdapter from "@infra/database/MongoDBClientAdapter";
 import MongoDBConnection from "@infra/database/MongoDBConnection";
 import MongoDBOptions from "@infra/database/MongoDBOptions";
 import MongoUserRepository from "@infra/database/repository/database/MongoUserRepository";
+import MemoryCredentialRepository from "@infra/database/repository/memory/MemoryCredentialRepository";
 import HttpServer from '@infra/http/HttpServer';
 import { errorHandler } from '@infra/http/middleware/errorHandler';
 import ApiStatusController from "ApiStatusController";
@@ -18,9 +19,10 @@ async function initializeApp() {
     const dbConnection = await createDBConnection();
     const mongoDBClientAdapter: DBClient = new MongoDBClientAdapter(dbConnection);
     const userRepository = new MongoUserRepository(mongoDBClientAdapter);
+    const credentialRepository = new MemoryCredentialRepository();
 
     new ApiStatusController(server);
-    new UserController(server, userRepository);
+    new UserController(server, userRepository, credentialRepository);
 }
 
 
