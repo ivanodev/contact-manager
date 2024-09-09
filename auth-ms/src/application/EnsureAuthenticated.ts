@@ -9,7 +9,8 @@ class EnsureAuthenticated {
     async execute(token: string): Promise<Credential | null> {
         
         const authenticatedService = new AuthenticatedService(this.credentialRepository);        
-        return await authenticatedService.authenticated(token);
+        let credential = await authenticatedService.authenticated(token);
+        return credential;
     }
 
 }

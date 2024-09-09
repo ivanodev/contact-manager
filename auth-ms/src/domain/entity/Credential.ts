@@ -6,7 +6,7 @@ class Credential {
     token: string;
     userId: UserId;
     roles: string[] = [];
-    readonly expireTime = 86400;// 3600;
+    expireTime = 86400;// 3600;
 
     constructor(token: string, userId: UserId) {
         this.token = token;
