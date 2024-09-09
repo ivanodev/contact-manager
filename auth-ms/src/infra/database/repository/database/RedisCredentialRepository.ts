@@ -1,59 +1,75 @@
 import Credential from "@domain/entity/Credential";
 import CredentialRepository from "@domain/repository/CredentialRepository";
-import redis from 'redis';
-import { promisify } from 'util';
+import { createClient } from 'redis';
 
-//const client = redis.createClient();
-const client = redis.createClient({
-    url: "redis://localhost:6379"
+const client = createClient({
+    url: "redis://token-redis:6379"
 });
 
+client.on('connect', () => {
+    console.log('Connection to Redis established');
+});
 
-const setAsync = promisify(client.set).bind(client);
-const expireAsync = promisify(client.expire).bind(client);
-const getAsync = promisify(client.get).bind(client);
-const delAsync = promisify(client.del).bind(client);
-const scanAsync = promisify(client.scan).bind(client);
+client.on('error', (err) => {
+    console.error('Error connecting to Redis:', err);
+});
+
+(async () => {
+    try {
+        await client.connect();
+        const pong = await client.ping();
+    } catch (error) {
+        console.error('Error connecting to Redis:', error);
+    }
+})();
 
 class RedisCredentialRepository implements CredentialRepository {
 
     async save(credential: Credential): Promise<Credential> {
-
         const { token, userId, roles, expireTime } = credential;
 
-        await setAsync(`token:${token}`, {userId, roles});
-        await expireAsync(`token:${token}`, expireTime);
+        await client.set(`token:${token}`, JSON.stringify({ userId, roles }));
+        await client.expire(`token:${token}`, expireTime);
         return credential;
     }
 
     async findOne(token: string): Promise<Credential | null> {
-
-        const value = await getAsync(`token:${token}`);
+        const value = await client.get(`token:${token}`);
 
         if (!value) return null;
 
-        const {userId, roles} = value;
+        const { userId, roles } = JSON.parse(value);
+
         const credential = new Credential(token, userId);
         credential.addRoles(roles);
+
         return credential;
     }
 
     async removeAll(): Promise<void> {
         const pattern = 'token:*';
-        let cursor = '0';
+        let cursor = 0;
 
         do {
-            const [newCursor, keys] = await scanAsync(cursor, 'MATCH', pattern);
+            const options = {
+                MATCH: pattern,
+                COUNT: 1000
+            };
+
+            const scanResult = await client.scan(cursor, options);
+            const newCursor = scanResult.cursor;
+            const keys = scanResult.keys;
+
             cursor = newCursor;
 
             if (keys.length > 0) {
-                await Promise.all(keys.map((key: any) => delAsync(key)));
+                await Promise.all(keys.map((key: any) => client.del(key)));
             }
-        } while (cursor !== '0');
+        } while (cursor !== 0);
     }
 
     async removeOne(token: string): Promise<void> {
-        await delAsync(`token:${token}`);
+        await client.del(`token:${token}`);
     }
 }
 

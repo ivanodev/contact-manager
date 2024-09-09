@@ -11,7 +11,7 @@ class AuthenticatedService {
         if (!token) {
             throw new AccessUnauthenticatedError();
         }
-        
+
         const credential = await this.credentialRepository.findOne(token);
 
         if (credential == null) {

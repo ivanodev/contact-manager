@@ -42,7 +42,6 @@ class UserController {
 
             const ensureAuthenticated: EnsureAuthenticated = new EnsureAuthenticated(credentialRepository);
             const { token } = body;
-            console.log(body);
             const credential = await ensureAuthenticated.execute(token);
             if (credential) credential.addRole("admin");
             return credential;
