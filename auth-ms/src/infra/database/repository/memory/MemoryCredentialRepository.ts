@@ -36,11 +36,15 @@ class MemoryCredentialRepository implements CredentialRepository {
         MemoryCredentialRepository.credentialsModel = [];
     }
 
+    removeOne(token: string): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
+
     private parseCredential(credentialModel: CredentialModel): Credential {
 
         const credential = new Credential(credentialModel.token, credentialModel.userId);
         if (credentialModel.roles) {
-            credential.roles = new Set(credentialModel.roles);
+            credential.roles = credentialModel.roles;
         }
         return credential;
     } 

@@ -1,4 +1,4 @@
-package com.anodos.contactms.controller;
+package com.anodos.contact_ms.infra.http.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

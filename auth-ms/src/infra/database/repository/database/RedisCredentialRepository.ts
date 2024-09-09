@@ -3,7 +3,12 @@ import CredentialRepository from "@domain/repository/CredentialRepository";
 import redis from 'redis';
 import { promisify } from 'util';
 
-const client = redis.createClient();
+//const client = redis.createClient();
+const client = redis.createClient({
+    url: "redis://localhost:6379"
+});
+
+
 const setAsync = promisify(client.set).bind(client);
 const expireAsync = promisify(client.expire).bind(client);
 const getAsync = promisify(client.get).bind(client);
@@ -26,7 +31,7 @@ class RedisCredentialRepository implements CredentialRepository {
         const value = await getAsync(`token:${token}`);
 
         if (!value) return null;
-        
+
         const {userId, roles} = value;
         const credential = new Credential(token, userId);
         credential.addRoles(roles);
@@ -42,7 +47,7 @@ class RedisCredentialRepository implements CredentialRepository {
             cursor = newCursor;
 
             if (keys.length > 0) {
-                await Promise.all(keys.map(key => delAsync(key)));
+                await Promise.all(keys.map((key: any) => delAsync(key)));
             }
         } while (cursor !== '0');
     }

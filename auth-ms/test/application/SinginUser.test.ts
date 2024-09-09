@@ -39,7 +39,7 @@ test("Should successfully sign in a user with valid details", async () => {
 
     const credential = await credentialRepository.findOne(token);
     expect(credential).toBeTruthy();
-    expect(credential?.roles.size).toBe(2);
+    expect(credential?.roles.length).toBe(2);
 });
 
 test("Should throw NotFoundError when user is not found during sign-in", async () => {

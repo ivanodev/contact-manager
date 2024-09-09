@@ -1,6 +1,6 @@
 FROM node:20.17.0-alpine
 
-WORKDIR .
+WORKDIR /contact-manager
 
 COPY package*.json ./
 
