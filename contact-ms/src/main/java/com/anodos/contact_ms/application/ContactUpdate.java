@@ -4,6 +4,8 @@ import com.anodos.contact_ms.domain.entity.Address;
 import com.anodos.contact_ms.domain.entity.Contact;
 import com.anodos.contact_ms.domain.entity.Email;
 import com.anodos.contact_ms.domain.entity.Phone;
+import com.anodos.contact_ms.domain.exception.ConflictException;
+import com.anodos.contact_ms.domain.exception.NotFoundException;
 import com.anodos.contact_ms.domain.repository.ContactRepository;
 import com.anodos.contact_ms.dto.AddressDTO;
 import com.anodos.contact_ms.dto.ContactDTO;
@@ -18,9 +20,17 @@ public class ContactUpdate {
 
     public String execute(ContactDTO contactDTO) {
 
+        if (!this.contactExists(contactDTO.getId())) {
+            throw new NotFoundException("Contact not exists");
+        }
+
         final Contact contact = this.parseEntity(contactDTO);
         final Contact contactSaved = contactRepository.save(contact);
         return contactSaved.getId();
+    }
+
+    private boolean contactExists(final String contactId) {
+        return contactRepository.contactExists(contactId);
     }
 
     private Contact parseEntity(final ContactDTO contactDTO) {

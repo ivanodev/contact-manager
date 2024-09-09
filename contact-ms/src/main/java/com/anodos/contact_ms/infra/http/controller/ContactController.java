@@ -1,7 +1,6 @@
 package com.anodos.contact_ms.infra.http.controller;
 
 import com.anodos.contact_ms.application.*;
-import com.anodos.contact_ms.domain.exception.UnauthenticatedException;
 import com.anodos.contact_ms.domain.repository.ContactRepository;
 import com.anodos.contact_ms.dto.ContactDTO;
 import com.anodos.contact_ms.infra.database.repository.database.DBContactRepository;
@@ -27,7 +26,10 @@ public class ContactController {
     private AuthWebClient authWebClient;
 
     @PostMapping("/new")
-    public String saveContact(@RequestBody ContactDTO contactDTO) {
+    public String saveContact(@RequestBody ContactDTO contactDTO,
+                              @RequestHeader("Authorization") String authorization) {
+
+        this.ensureAuthenticated(authorization);
 
         final ContactRepository contactRepository = new DBContactRepository(
                 jpaContactRepository, jpaAddressRepository
@@ -39,7 +41,10 @@ public class ContactController {
     }
 
     @PutMapping("/update")
-    public String updateContact(@RequestBody ContactDTO contactDTO) {
+    public String updateContact(@RequestBody ContactDTO contactDTO,
+                                @RequestHeader("Authorization") String authorization) {
+
+        this.ensureAuthenticated(authorization);
 
         final ContactRepository contactRepository = new DBContactRepository(
                 jpaContactRepository, jpaAddressRepository
@@ -52,13 +57,9 @@ public class ContactController {
 
     @DeleteMapping("/delete/{contactId}")
     public ResponseEntity<Void> deleteContact(@PathVariable String contactId,
-                                              @RequestHeader("Authorization") String authorizatio) {
-
-        final Authentication authentication = new Authentication(authWebClient);
-        final String token = this.getTokenFromHeader(authorizatio);
+                                              @RequestHeader("Authorization") String authorization) {
         final String role = "admin";
-
-        authentication.isAuthorized(token, role);
+        this.ensureAuthorization(authorization, role);
 
         final ContactRepository contactRepository = new DBContactRepository(
                 jpaContactRepository, jpaAddressRepository
@@ -71,7 +72,10 @@ public class ContactController {
 
     @GetMapping("/find-all")
     public List<ContactDTO> findAll(@RequestParam(defaultValue = "0") int page,
-                                    @RequestParam(defaultValue = "10") int limit) {
+                                    @RequestParam(defaultValue = "10") int limit,
+                                    @RequestHeader("Authorization") String authorization) {
+
+        this.ensureAuthenticated(authorization);
 
         final ContactRepository contactRepository = new DBContactRepository(
                 jpaContactRepository, jpaAddressRepository
@@ -82,7 +86,10 @@ public class ContactController {
     }
 
     @GetMapping("/find-id/{contactId}")
-    public ResponseEntity<ContactDTO> findById(@PathVariable String contactId) {
+    public ResponseEntity<ContactDTO> findById(@PathVariable String contactId,
+                                               @RequestHeader("Authorization") String authorization) {
+
+        this.ensureAuthenticated(authorization);
 
         final ContactRepository contactRepository = new DBContactRepository(
                 jpaContactRepository, jpaAddressRepository
@@ -98,11 +105,15 @@ public class ContactController {
         }
     }
 
-    private String getTokenFromHeader(final String authorization) {
-        if (authorization != null && authorization.startsWith("Bearer ")) {
-            return authorization.substring(7);
-        } else {
-            throw new UnauthenticatedException("Invalid Authorization header");
-        }
+    private void ensureAuthenticated(final String authorization) {
+
+        final Authentication authentication = new Authentication(authWebClient);
+        authentication.isAuthenticated(authorization);
+    }
+
+    private void ensureAuthorization(final String authorization, final String role) {
+
+        final Authentication authentication = new Authentication(authWebClient);
+        authentication.isAuthorized(authorization, role);
     }
 }

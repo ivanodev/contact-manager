@@ -34,8 +34,8 @@ class RedisCredentialRepository implements CredentialRepository {
     }
 
     async findOne(token: string): Promise<Credential | null> {
-        const value = await client.get(`token:${token}`);
 
+        const value = await client.get(`token:${token}`);
         if (!value) return null;
 
         const { userId, roles } = JSON.parse(value);

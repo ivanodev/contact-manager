@@ -10,14 +10,12 @@ public class ErrorResponse {
     private final String details;
     private final Integer code;
     private final String status;
-    private final List<ErrorData> validations;
 
     public ErrorResponse(String error, String details, Integer code, String status, List<ErrorData> validations) {
         this.error = error;
         this.details = details;
         this.code = code;
         this.status = status;
-        this.validations = validations;
     }
 
     public ErrorResponse(String error, String details) {
@@ -25,7 +23,6 @@ public class ErrorResponse {
         this.details = details;
         this.code = null;
         this.status = null;
-        this.validations = null;
     }
 
     public String getError() {
@@ -42,9 +39,5 @@ public class ErrorResponse {
 
     public String getStatus() {
         return status;
-    }
-
-    public List<ErrorData> getValidations() {
-        return validations;
     }
 }

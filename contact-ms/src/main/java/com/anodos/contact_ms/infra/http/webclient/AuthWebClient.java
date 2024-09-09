@@ -2,13 +2,19 @@ package com.anodos.contact_ms.infra.http.webclient;
 
 import com.anodos.contact_ms.domain.entity.ANToken;
 import com.anodos.contact_ms.domain.entity.Credential;
+import com.anodos.contact_ms.domain.exception.ForbiddenException;
 import com.anodos.contact_ms.domain.exception.InternalServerErrorException;
+import com.anodos.contact_ms.domain.exception.UnauthenticatedException;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientException;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Service
 public class AuthWebClient {
@@ -34,14 +40,27 @@ public class AuthWebClient {
     public Credential getCredential(final ANToken token) {
 
         try {
-            return webClient.post()
+            final String response = webClient.post()
                     .uri(URI_AUTHENTICATION)
                     .bodyValue(token)
                     .retrieve()
-                    .bodyToMono(Credential.class)
+                    .bodyToMono(String.class)
                     .block();
+
+            return gson.fromJson(response, Credential.class);
         } catch (RuntimeException e) {
-            throw new InternalServerErrorException("There was an error checking the user's authentication - " + e.getMessage());
+
+            if (e instanceof WebClientResponseException webClientResponseException) {
+                if (webClientResponseException.getStatusCode().isSameCodeAs(HttpStatus.UNAUTHORIZED)) {
+                    throw new UnauthenticatedException("Authentication error");
+                }
+
+                if (webClientResponseException.getStatusCode().isSameCodeAs(HttpStatus.FORBIDDEN)) {
+                    throw new ForbiddenException("Authentication error");
+                }
+            }
+
+            throw new InternalServerErrorException("Authentication error - " + e.getMessage());
         }
     }
 }

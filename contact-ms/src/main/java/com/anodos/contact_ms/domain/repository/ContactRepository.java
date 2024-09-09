@@ -12,4 +12,5 @@ public interface ContactRepository {
     Contact findById(String contactId);
     void deleteById(String contactId);
     boolean emailExists(String email);
+    boolean contactExists(String contactId);
 }
