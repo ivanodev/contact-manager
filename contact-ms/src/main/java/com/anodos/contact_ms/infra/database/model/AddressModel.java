@@ -1,4 +1,4 @@
-package com.anodos.contact_ms.infra.http.controller.database.model;
+package com.anodos.contact_ms.infra.database.model;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;

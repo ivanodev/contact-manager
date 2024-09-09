@@ -2,7 +2,7 @@ package com.anodos.contact_ms.domain.exception;
 
 public class DataBasePersistenceException extends InternalServerErrorException {
 
-    private static final String MESSAGE = "Erro de persistência de dados na tabela %s - %s";
+    private static final String MESSAGE = "Data persistence error in table %s - %s";
 
     public DataBasePersistenceException(String tableName, String exceptionMessage) {
 

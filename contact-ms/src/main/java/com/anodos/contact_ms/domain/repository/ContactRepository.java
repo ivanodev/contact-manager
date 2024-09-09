@@ -1,10 +1,8 @@
 package com.anodos.contact_ms.domain.repository;
 
-import com.anodos.contact_ms.domain.entity.Address;
 import com.anodos.contact_ms.domain.entity.Contact;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface ContactRepository {
 
@@ -13,5 +11,5 @@ public interface ContactRepository {
     List<Contact> findByPage(Integer page, Integer size);
     Contact findById(String contactId);
     void deleteById(String contactId);
-
+    boolean emailExists(String email);
 }

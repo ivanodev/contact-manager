@@ -1,9 +1,9 @@
-package com.anodos.contact_ms.domain.entity;
+package com.anodos.contact_ms.dto;
 
 import com.anodos.contact_ms.domain.exception.BadRequestException;
 import com.anodos.contact_ms.utils.ANStringUtils;
 
-public class Address {
+public class AddressDTO {
 
     private String id;
     private String contactId;
@@ -14,18 +14,12 @@ public class Address {
     private String postalCode;
     private String country;
 
-    public Address(String id, String contactId, String street, String number, String city, String state, String postalCode, String country) {
+    public AddressDTO(){
 
-        this.validateValue(contactId, "ContactId");
-        this.validateValue(street, "Street");
-        this.validateValue(number, "Number");
-        this.validateValue(city, "City");
-        this.validateValue(state, "State");
-        this.validateValue(postalCode, "PostalCode");
-        this.validateValue(country, "Country");
+    }
 
+    public AddressDTO(String id, String street, String number, String city, String state, String postalCode, String country) {
         this.id = id;
-        this.contactId = contactId;
         this.street = street;
         this.number = number;
         this.city = city;
@@ -34,16 +28,7 @@ public class Address {
         this.country = country;
     }
 
-    public Address(String contactId, String street, String number, String city, String state, String postalCode, String country) {
-
-        this.validateValue(street, "Street");
-        this.validateValue(number, "Number");
-        this.validateValue(city, "City");
-        this.validateValue(state, "State");
-        this.validateValue(postalCode, "PostalCode");
-        this.validateValue(country, "Country");
-
-        this.contactId = contactId;
+    public AddressDTO(String street, String number, String city, String state, String postalCode, String country) {
         this.street = street;
         this.number = number;
         this.city = city;
@@ -114,14 +99,6 @@ public class Address {
 
     public void setCountry(String country) {
         this.country = country;
-    }
-
-
-    private void validateValue(final String value, final String name) {
-
-        if (ANStringUtils.isNullOrBlank(value)) {
-            throw new BadRequestException(name + " cannot be empty or null");
-        }
     }
 }
 

@@ -1,15 +1,17 @@
-package com.anodos.contact_ms.infra.http.controller.database.repository.database;
+package com.anodos.contact_ms.infra.database.repository.database;
 
 import com.anodos.contact_ms.domain.entity.Address;
 import com.anodos.contact_ms.domain.entity.Contact;
 import com.anodos.contact_ms.domain.entity.Email;
 import com.anodos.contact_ms.domain.entity.Phone;
+import com.anodos.contact_ms.domain.exception.DataBasePersistenceException;
 import com.anodos.contact_ms.domain.repository.ContactRepository;
-import com.anodos.contact_ms.infra.http.controller.database.model.AddressModel;
-import com.anodos.contact_ms.infra.http.controller.database.model.ContactModel;
+import com.anodos.contact_ms.infra.database.model.AddressModel;
+import com.anodos.contact_ms.infra.database.model.ContactModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -35,10 +37,22 @@ public class DBContactRepository implements ContactRepository {
     public Contact save(final Contact contact) {
 
         final ContactModel contactModel = this.parseContactModel(contact);
-        final ContactModel contactSaved = this.jpaContactRepository.save(contactModel);
+        final ContactModel contactSaved;
+        try {
+            contactSaved = this.jpaContactRepository.save(contactModel);
+        } catch (Exception e) {
+            throw new DataBasePersistenceException("contacts", e.getMessage());
+        }
 
-        final AddressModel addressModel = this.parseAddressModel(contact.getAddress());
-        final AddressModel addressSaved = this.jpaAddressRepository.save(addressModel);
+        final AddressModel addressModel = this.parseAddressModel(contact.getAddress(), contactSaved.getId());
+
+        final AddressModel addressSaved;
+        try {
+            addressSaved = this.jpaAddressRepository.save(addressModel);
+        } catch (Exception e) {
+            this.jpaContactRepository.deleteById(contactSaved.getId());
+            throw new DataBasePersistenceException("addresses", e.getMessage());
+        }
 
         return this.parseContactEntity(contactSaved, addressSaved);
     }
@@ -93,9 +107,14 @@ public class DBContactRepository implements ContactRepository {
         this.jpaContactRepository.deleteById(UUID.fromString(contactId));
     }
 
+    @Override
+    public boolean emailExists(String email) {
+        return this.jpaContactRepository.existsByEmail(email);
+    }
+
     private ContactModel parseContactModel(final Contact contact) {
 
-        final UUID contactId = UUID.fromString(contact.getId());
+        final UUID contactId = contact.getId() != null ? UUID.fromString(contact.getId()) : null;
 
         return new ContactModel(
                 contactId,
@@ -125,10 +144,9 @@ public class DBContactRepository implements ContactRepository {
         );
     }
 
-    private AddressModel parseAddressModel(final Address address) {
+    private AddressModel parseAddressModel(final Address address, final UUID contactId) {
 
-        final UUID addressId = UUID.fromString(address.getId());
-        final UUID contactId = UUID.fromString(address.getContactId());
+        final UUID addressId = address.getId() != null ? UUID.fromString(address.getId()) : null;
 
         return new AddressModel(
                 addressId,

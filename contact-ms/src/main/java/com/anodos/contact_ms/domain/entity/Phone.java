@@ -19,6 +19,14 @@ public class Phone {
         this.number = number;
     }
 
+    public static Phone fromFullPhoneNumber(final String fullPhoneNumber) {
+
+        final String countryCode = fullPhoneNumber.substring(0, 2);
+        final String areaCode = fullPhoneNumber.substring(2, 4);
+        final String phoneNumber = fullPhoneNumber.substring(4);
+        return new Phone(countryCode, areaCode, phoneNumber);
+    }
+
     public String getCountryCode() {
         return countryCode;
     }
@@ -50,7 +58,7 @@ public class Phone {
     private void validateValue(final String value, final String name) {
 
         if (ANStringUtils.isNullOrBlank(value)) {
-            throw new BadRequestException(name + "cannot be empty or null");
+            throw new BadRequestException(name + " cannot be empty or null");
         }
 
         final boolean onlyNumber = value != null && value.matches("\\d+");

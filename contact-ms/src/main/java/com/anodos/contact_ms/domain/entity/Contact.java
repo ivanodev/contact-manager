@@ -12,7 +12,6 @@ public class Contact {
     private Phone phone;
 
     public Contact(final String id, final String name, final Email email, final Address address, final Phone phone) {
-        this.validateValue(id, "Id");
         this.validateValue(name, "Name");
         this.id = id;
         this.name = name;
@@ -73,7 +72,7 @@ public class Contact {
     private void validateValue(final String value, final String name) {
 
         if (ANStringUtils.isNullOrBlank(value)) {
-            throw new BadRequestException(name + "cannot be empty or null");
+            throw new BadRequestException(name + " cannot be empty or null");
         }
     }
 }

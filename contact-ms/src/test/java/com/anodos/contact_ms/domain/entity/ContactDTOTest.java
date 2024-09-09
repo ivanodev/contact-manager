@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @ExtendWith(MockitoExtension.class)
-class ContactTest {
+class ContactDTOTest {
 
     @BeforeEach
     void setUp() {
@@ -26,7 +26,7 @@ class ContactTest {
     @DisplayName("Should create a valid new contact instance")
     void shouldCreateValidNewContactInstance() {
 
-        var address = new Address("Rua João da Silva", "São Paulo", "São Paulo", "09878-098", "Brasil", "");
+        var address = new Address("08637e24280a40e3965a5e0402ecae6f", "Rua João da Silva", "2", "São Paulo", "São Paulo", "09878-098", "Brasil");
         var email = new Email("email@email.com");
         var phone = new Phone("55", "11", "998879988" );
         var contact = new Contact("Jhon Doe", email, address, phone);

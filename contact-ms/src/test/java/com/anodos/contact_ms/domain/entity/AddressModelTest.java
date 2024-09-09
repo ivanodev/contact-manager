@@ -20,7 +20,7 @@ class AddressModelTest {
     @DisplayName("Should create a valid new address instance")
     void shouldCreateValidNewAddressInstance() {
 
-        var address = new Address("Rua João da Silva", "São Paulo", "São Paulo", "09878-098", "Brasil", "");
+        var address = new Address("08637e24280a40e3965a5e0402ecae6f", "Rua João da Silva", "2", "São Paulo", "São Paulo", "09878-098", "Brasil");
         Assertions.assertNotNull(address);
     }
 }
