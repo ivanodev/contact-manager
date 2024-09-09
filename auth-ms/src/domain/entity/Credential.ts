@@ -5,8 +5,8 @@ class Credential {
 
     token: string;
     userId: UserId;
-    roles: Set<string> = new Set();
-    readonly expireTime = 3600;
+    roles: string[] = [];
+    readonly expireTime = 86400;// 3600;
 
     constructor(token: string, userId: UserId) {
         this.token = token;
@@ -15,13 +15,16 @@ class Credential {
 
     addRole(name: string): void {
         if (StringUtils.isNull(name) || StringUtils.isEmpty(name)) return;
-        this.roles.add(name);    
+        if (this.roles.includes(name)) return;
+        this.roles.push(name);    
     }
 
     addRoles(names: string[]) {
         
         names.forEach(name => {
-            this.addRole(name)
+            if (!this.roles.includes(name)) {
+                this.roles.push(name); 
+            }
         });
     }
 

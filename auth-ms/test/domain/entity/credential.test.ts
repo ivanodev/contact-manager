@@ -1,10 +1,9 @@
 import Credential from "@domain/entity/Credential";
 import User from "@domain/entity/User";
-import { v4 } from "uuid";
 
 test("Should create new user credential valid", () => {
 
-    const token = v4();
+    const token = " c6e1215e7faa43ca83ce11013ce59c84";
     const user = new User("email@email.com", "An##3985");
     
     const credential = new Credential(token, user.id);
@@ -12,24 +11,24 @@ test("Should create new user credential valid", () => {
     credential.addRole("sales");
 
     expect(credential).toBeTruthy();
-    expect(credential.roles.size).toBe(2);
+    expect(credential.roles.length).toBe(2);
 });
 
 test("Should create new user credential valid, even if empty roles are added", () => {
 
-    const token = v4();
+    const token = " c6e1215e7faa43ca83ce11013ce59c84";
     const user = new User("email@email.com", "An##3985");
     
     const credential = new Credential(token, user.id);
     credential.addRole(" ");
 
     expect(credential).toBeTruthy();
-    expect(credential.roles.size).toBe(0);
+    expect(credential.roles.length).toBe(0);
 });
 
 test("Should create a new user credential valid, even if duplicate roles are added, it should maintain only one of each", () => {
 
-    const token = v4();
+    const token = " c6e1215e7faa43ca83ce11013ce59c84";
     const user = new User("email@email.com", "An##3985");
     
     const credential = new Credential(token, user.id);
@@ -39,5 +38,5 @@ test("Should create a new user credential valid, even if duplicate roles are add
     credential.addRole("sales");
 
     expect(credential).toBeTruthy();
-    expect(credential.roles.size).toBe(2);
+    expect(credential.roles.length).toBe(2);
 });

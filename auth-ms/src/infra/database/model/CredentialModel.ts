@@ -7,11 +7,11 @@ class CredentialModel extends Model  {
     userId: UserId;
     roles: string[];
 
-    constructor(token: string, userId: UserId, roles: Set<string>) {
+    constructor(token: string, userId: UserId, roles: string[]) {
         super();
         this.token = token;
         this.userId = userId;
-        this.roles = Array.from(roles); 
+        this.roles = roles; 
     }
 
 }

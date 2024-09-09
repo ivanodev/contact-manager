@@ -5,7 +5,7 @@ class ApiStatusController {
 
     constructor(readonly httpServer: HttpServer) {
 
-        httpServer.on(HttpMethod.GET, "/anodos/contact-manager/status", async function (params: any, body: any) {
+        httpServer.on(HttpMethod.GET, "/anodos/contact-manager/auths/status", async function (params: any, body: any) {
            
             return {
                 service: "Ânodos Global Application - Authentication MS",
