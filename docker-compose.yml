@@ -11,6 +11,20 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=admin
     ports:
       - 27017:27017
+    networks:
+      - contactmanager
+
+  contact-db:
+    container_name: contact-db
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: contact-db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    networks:
+      - contactmanager
+    ports:
+      - "5432:5432"
 
   auth-ms:
     build: "./auth-ms"
@@ -19,20 +33,40 @@ services:
       - PORT=4000
       - MONGO_URI=mongodb://admin:admin@auth-db:27017/auth-db?authSource=admin
     networks:
-      - contact-manager
+      - contactmanager
     ports:
       - 4000:4000
     depends_on:
       - auth-db
+      - token-redis
+
+  contact-ms:
+    build: "./contact-ms"
+    container_name: contact-ms
+    depends_on:
+      - contact-db
+      - auth-ms
+      - token-redis
+    networks:
+      - contactmanager
+    environment:
+      - DB_HOST=contact-db
+      - DB_NAME=contact-db
+      - DB_USER=admin
+      - DB_PASSWORD=admin
+      - DB_PORT=5432
+      - AUTH_MS_HOST=auth-ms
+    ports:
+      - 4001:4001
 
   token-redis:
     container_name: token-redis
     image: redis:latest
     networks:
-      - contact-manager
+      - contactmanager
     ports:
       - "6379:6379"
 
 networks:
-  contact-manager:
+  contactmanager:
     driver: bridge
