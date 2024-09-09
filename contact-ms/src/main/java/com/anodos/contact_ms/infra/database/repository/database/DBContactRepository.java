@@ -112,6 +112,12 @@ public class DBContactRepository implements ContactRepository {
         return this.jpaContactRepository.existsByEmail(email);
     }
 
+    @Override
+    public boolean contactExists(String contactId) {
+        final UUID id = UUID.fromString(contactId);
+        return this.jpaContactRepository.existsById(id);
+    }
+
     private ContactModel parseContactModel(final Contact contact) {
 
         final UUID contactId = contact.getId() != null ? UUID.fromString(contact.getId()) : null;

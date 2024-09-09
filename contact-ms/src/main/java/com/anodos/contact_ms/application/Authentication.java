@@ -18,19 +18,20 @@ public class Authentication {
         this.authWebClient = authWebClient;
     }
 
-    public boolean isAuthorized(final String token, final String roleName) {
+    public void isAuthorized(final String authorization, final String roleName) {
 
-        this.isAuthenticated(token);
+        this.isAuthenticated(authorization);
         List<String> roles = Arrays.asList(this.credential.getRoles());
 
         final boolean authorized = roles.contains(roleName);
-        if (authorized) return true;
-
-        throw new ForbiddenException("Authorization Error");
+        if (!authorized) {
+            throw new ForbiddenException("Authorization Error");
+        }
     }
 
-    public void isAuthenticated(final String token) {
+    public void isAuthenticated(final String authorization) {
 
+        final String token = this.getTokenFromHeader(authorization);
         this.loadCredential(token);
         final boolean authenticated = this.credential != null;
 
@@ -47,5 +48,15 @@ public class Authentication {
         }
     }
 
+    public Credential getCredential() {
+        return credential;
+    }
 
+    private String getTokenFromHeader(final String authorization) {
+        if (authorization != null && authorization.startsWith("Bearer ")) {
+            return authorization.substring(7);
+        } else {
+            throw new UnauthenticatedException("Invalid Authorization header");
+        }
+    }
 }
