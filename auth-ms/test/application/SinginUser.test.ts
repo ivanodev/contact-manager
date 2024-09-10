@@ -1,5 +1,5 @@
-import SinginUser from "@application/SingninUser";
-import SingupUser from "@application/SingupUser";
+import SigninUser from "@application/SigninUser";
+import SingupUser from "@application/SignupUser";
 import NotFoundError from "@common/error/NotFoundError";
 import Token from "@domain/entity/Token";
 import CredentialRepository from "@domain/repository/CredentialRepository";
@@ -26,16 +26,17 @@ beforeEach(async () => {
 
 test("Should successfully sign in a user with valid details", async () => {
 
-    const singinUser = new SinginUser(userRepository, credentialRepository);
+    const singinUser = new SigninUser(userRepository, credentialRepository);
     const token = await singinUser.execute(login, password) as string;
     const user = await userRepository.findByLogin(login);
-
+    
     expect(token).toBeTruthy();
+    expect(user).not.toBeNull();
+    expect(user).toBeTruthy();
 
-    const decode = Token.verify(token);
-    const { sub, login: userLogin } = decode;
-    expect(user?.id).toBe(sub);
-    expect(login).toBe(userLogin);
+    if (user) {
+        await Token.verify(user.id, token);
+    }
 
     const credential = await credentialRepository.findOne(token);
     expect(credential).toBeTruthy();
@@ -45,7 +46,7 @@ test("Should successfully sign in a user with valid details", async () => {
 test("Should throw NotFoundError when user is not found during sign-in", async () => {
 
     const loginNotFound = "ema@email.com"
-    const singinUser = new SinginUser(userRepository, credentialRepository);
+    const singinUser = new SigninUser(userRepository, credentialRepository);
     let error = null;
 
     try {
@@ -60,7 +61,7 @@ test("Should throw NotFoundError when user is not found during sign-in", async (
 test("Should throw AccessUnauthenticatedError when the password is incorrect during sign-in", async () => {
 
     const passwordIncorrect = "An##3999"
-    const singinUser = new SinginUser(userRepository, credentialRepository);
+    const singinUser = new SigninUser(userRepository, credentialRepository);
     let error = null;
 
     try {

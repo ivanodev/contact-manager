@@ -1,4 +1,4 @@
-import SingupUser from "@application/SingupUser";
+import SingupUser from "@application/SignupUser";
 import ConflictError from "@common/error/ConflictError";
 import User from "@domain/entity/User";
 import UserRepository from '@domain/repository/UserRepository';

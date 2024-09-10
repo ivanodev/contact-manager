@@ -1,5 +1,5 @@
 import InternalServerErrorError from "@common/error/InternalServerErrorError";
-import Token from "@domain/entity/Token";
+import Token from "@domain/entity/JWToken";
 
 test("Should create token valid", () => {
 

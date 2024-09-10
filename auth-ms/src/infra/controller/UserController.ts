@@ -1,7 +1,7 @@
 import EnsureAuthenticated from "@application/EnsureAuthenticated";
+import SigninUser from "@application/SigninUser";
 import SignoutUser from "@application/SignoutUser";
-import SinginUser from "@application/SingninUser";
-import SingupUser from "@application/SingupUser";
+import SingupUser from "@application/SignupUser";
 import CredentialRepository from '@domain/repository/CredentialRepository';
 import UserRepository from "@domain/repository/UserRepository";
 import HttpServer from "@infra/http/HttpServer";
@@ -13,7 +13,7 @@ class UserController {
         readonly userRepository: UserRepository, 
         readonly credentialRepository: CredentialRepository) {
 
-        httpServer.on(HttpMethod.POST, "/anodos/contact-manager/auths/singup", 
+        httpServer.on(HttpMethod.POST, "/anodos/contact-manager/auths/signup", 
             async function (params: any, query: any, body: any) {
 
             const singUpUser: SingupUser = new SingupUser(userRepository);
@@ -21,15 +21,15 @@ class UserController {
             return await singUpUser.execute(login, password);
         });
 
-        httpServer.on(HttpMethod.POST, "/anodos/contact-manager/auths/singin", 
+        httpServer.on(HttpMethod.POST, "/anodos/contact-manager/auths/signin", 
             async function (params: any, query: any, body: any) {
 
-            const singinUser: SinginUser = new SinginUser(userRepository, credentialRepository);
+            const singinUser: SigninUser = new SigninUser(userRepository, credentialRepository);
             const { login, password } = body;
             return await singinUser.execute(login, password);
         });
 
-        httpServer.on(HttpMethod.POST, "/anodos/contact-manager/auths/singout", 
+        httpServer.on(HttpMethod.POST, "/anodos/contact-manager/auths/signout", 
             async function (params: any, query: any, body: any) {
 
             const singoutUser: SignoutUser = new SignoutUser(credentialRepository);
@@ -43,7 +43,6 @@ class UserController {
             const ensureAuthenticated: EnsureAuthenticated = new EnsureAuthenticated(credentialRepository);
             const { token } = body;
             const credential = await ensureAuthenticated.execute(token);
-            if (credential) credential.addRole("admin");
             return credential;
         });
     }

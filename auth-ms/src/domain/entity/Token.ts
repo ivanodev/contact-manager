@@ -1,30 +1,31 @@
+import ConflictError from "@common/error/ConflictError";
 import InternalServerErrorError from "@common/error/InternalServerErrorError";
 import { StringUtils } from "@common/utils";
-import authConfig from "@config/auth";
-import { sign, verify } from "jsonwebtoken";
+import { compare, hash } from 'bcryptjs';
 
-export interface TokenPayload {
-    iat: number;
-    exp: number;
-    sub: string;
-    login: string;
-}
 
 class Token {
 
     value: string;
 
-    constructor(readonly userId: string, readonly login: string) {
+    private constructor(readonly userId: string) {
         
         this.checkUserId();
-        this.checkLogin();
-        this.generate();
     }
 
-    public static verify(token: string): TokenPayload {
+    public static async generateToken(userId: string): Promise<string> {
+        const token = new Token(userId);
+        await token.generate();
+        return token.value;
+    }
 
-        const decoded = verify(token, authConfig.jwt.secret);
-        return decoded as TokenPayload;
+    public static async verify(userId: string, token: string): Promise<void> {
+
+        const match = await compare(userId, token);
+
+        if (!match) {
+            throw new ConflictError("Token invalid");
+        }
     }
 
     private checkUserId(): void {
@@ -33,26 +34,10 @@ class Token {
         }
     }
 
-    private checkLogin(): void {
-        if (StringUtils.isNull(this.login) || StringUtils.isEmpty(this.login)) {
-            throw new InternalServerErrorError("Login cannot be empty to generate token");
-        }
-    }
+    private async generate(): Promise<void> {
 
-    private generate(): void {
-
-        const { secret, expiresIn } = authConfig.jwt;
-
-		this.value = sign(
-			{
-				login: this.login
-			},
-			secret,
-			{
-				subject: this.userId,
-				expiresIn: expiresIn,
-			}
-		);
+        const saltRounds = 8;
+        this.value = await hash(this.userId, saltRounds);
     }
 }
 
