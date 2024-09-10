@@ -24,6 +24,10 @@ public class ContactUpdate {
             throw new NotFoundException("Contact not exists");
         }
 
+        if (this.emailExistsForAnotherContact(contactDTO)) {
+            throw new ConflictException("Email already registered for another contact");
+        }
+
         final Contact contact = this.parseEntity(contactDTO);
         final Contact contactSaved = contactRepository.save(contact);
         return contactSaved.getId();
@@ -31,6 +35,11 @@ public class ContactUpdate {
 
     private boolean contactExists(final String contactId) {
         return contactRepository.contactExists(contactId);
+    }
+
+    private boolean emailExistsForAnotherContact(final ContactDTO contactDTO) {
+
+        return this.contactRepository.existsByEmailAndIdNot(contactDTO.getEmail(), contactDTO.getId());
     }
 
     private Contact parseEntity(final ContactDTO contactDTO) {

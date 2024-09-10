@@ -19,7 +19,7 @@ public class ContactRegister {
 
     public String execute(final ContactDTO contactDTO) {
 
-        if ( this.emailExists(contactDTO.getEmail())) {
+        if (this.emailExists(contactDTO.getEmail())) {
             throw new ConflictException("There is a contact with the registered email");
         }
 

@@ -2,6 +2,7 @@ import Credential from "@domain/entity/Credential";
 import CredentialRepository from "@domain/repository/CredentialRepository";
 import { createClient } from 'redis';
 
+
 const client = createClient({
     url: "redis://token-redis:6379"
 });

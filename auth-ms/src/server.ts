@@ -1,3 +1,4 @@
+import RegisterAdminUser from "@application/RegisterAdminUser";
 import UserController from "@infra/controller/UserController";
 import MongoDBClientAdapter from "@infra/database/MongoDBClientAdapter";
 import MongoDBConnection from "@infra/database/MongoDBConnection";
@@ -23,6 +24,7 @@ async function initializeApp() {
 
     new ApiStatusController(server);
     new UserController(server, userRepository, credentialRepository);
+    await new RegisterAdminUser(userRepository).execute();
 }
 
 

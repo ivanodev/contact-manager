@@ -3,6 +3,7 @@ package com.anodos.contact_ms.domain.repository;
 import com.anodos.contact_ms.domain.entity.Contact;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ContactRepository {
 
@@ -13,4 +14,5 @@ public interface ContactRepository {
     void deleteById(String contactId);
     boolean emailExists(String email);
     boolean contactExists(String contactId);
+    boolean existsByEmailAndIdNot(String email, String comtactId);
 }

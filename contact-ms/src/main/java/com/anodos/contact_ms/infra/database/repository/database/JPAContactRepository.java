@@ -10,4 +10,6 @@ import java.util.UUID;
 public interface JPAContactRepository extends JpaRepository<ContactModel, UUID> {
 
     boolean existsByEmail(String email);
+    ContactModel findByEmail(String email);
+    boolean existsByEmailAndIdNot(String email, UUID id);
 }

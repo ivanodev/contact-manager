@@ -57,7 +57,7 @@ class MemoryUserRepository implements UserRepository {
 
         const user = new User(userModel.login, userModel.password, userModel._id);
         if (userModel.roles) {
-            user.roles = new Set(userModel.roles);
+            user.roles = userModel.roles;
         }
         return user;
     }

@@ -21,6 +21,7 @@ public class Authentication {
     public void isAuthorized(final String authorization, final String roleName) {
 
         this.isAuthenticated(authorization);
+
         List<String> roles = Arrays.asList(this.credential.getRoles());
 
         final boolean authorized = roles.contains(roleName);

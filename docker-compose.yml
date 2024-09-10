@@ -67,6 +67,17 @@ services:
     ports:
       - "6379:6379"
 
+  frontend-web:
+    build: "./front-end-web"
+    container_name: front-end-web
+    networks:
+      - contactmanager
+    ports:
+      - "3000:80"
+    depends_on:
+      - auth-ms
+      - contact-ms
+
 networks:
   contactmanager:
     driver: bridge

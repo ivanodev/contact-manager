@@ -4,7 +4,7 @@ import Token from "@domain/entity/Token";
 import CredentialRepository from "@domain/repository/CredentialRepository";
 import UserRepository from "@domain/repository/UserRepository";
 
-class SinginUser {
+class SigninUser {
 
     constructor(readonly userRepository: UserRepository, 
         readonly credentialRepository: CredentialRepository){}
@@ -19,13 +19,13 @@ class SinginUser {
 
         await user.passwordMatch(password);
 
-        const token = new Token(user.id, user.login);
-        const credential = new Credential(token.value, user.id);
-        if (user.roles) credential.addRoles(Array.from(user.roles));
+        const token = await Token.generateToken(user.id);
+        const credential = new Credential(token, user.id);
+        if (user.roles) credential.addRoles(user.roles);
     
         await this.credentialRepository.save(credential);
-        return token.value;
+        return token;
     }
 }
 
-export default SinginUser;
+export default SigninUser;

@@ -23,7 +23,7 @@ public class ContactFetchAll {
 
         List<Contact> contacts = this.contactRepository.findByPage(page, size);
 
-        for (Contact contact: contacts) {
+        for (Contact contact : contacts) {
 
             final ContactDTO contactDTO = new ContactDTO();
             contactDTO.setId(contact.getId());

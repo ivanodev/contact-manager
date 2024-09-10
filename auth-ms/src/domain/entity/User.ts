@@ -9,7 +9,7 @@ class User {
     id: UserId;
     login: string;
     password: string;
-    roles: Set<string> = new Set();
+    roles: string[] = [];
     
     constructor(login: string, password: string, id: string = "") {
         this.checkLoginValid(login);
@@ -49,16 +49,17 @@ class User {
 
     addRole(name: string): void {
         if (StringUtils.isNull(name) || StringUtils.isEmpty(name)) return;
-        this.roles.add(name);    
+        if (this.roles.includes(name)) return;
+        this.roles.push(name);  
     }
 
     clearRole(name: string): void {
         if (StringUtils.isNull(name) || StringUtils.isEmpty(name)) return;
-        this.roles.delete(name);
+        this.roles = this.roles.filter(role => role !== name);
     }
 
     clearAllRoles(): void {
-        this.roles.clear();
+        this.roles = [];
     }
 
     private checkLoginValid(email: string): void {

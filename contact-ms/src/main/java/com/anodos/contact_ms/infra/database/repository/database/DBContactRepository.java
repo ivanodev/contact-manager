@@ -11,7 +11,6 @@ import com.anodos.contact_ms.infra.database.model.ContactModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -116,6 +115,12 @@ public class DBContactRepository implements ContactRepository {
     public boolean contactExists(String contactId) {
         final UUID id = UUID.fromString(contactId);
         return this.jpaContactRepository.existsById(id);
+    }
+
+    @Override
+    public boolean existsByEmailAndIdNot(String email, String comtactId) {
+        final UUID id = UUID.fromString(comtactId);
+        return this.jpaContactRepository.existsByEmailAndIdNot(email, id);
     }
 
     private ContactModel parseContactModel(final Contact contact) {
