@@ -6,8 +6,6 @@ import com.anodos.contact_ms.domain.repository.ContactRepository;
 import com.anodos.contact_ms.dto.AddressDTO;
 import com.anodos.contact_ms.dto.ContactDTO;
 
-import java.util.List;
-
 public class ContactFetchById {
 
     private final ContactRepository contactRepository;
